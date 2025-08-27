@@ -3,13 +3,19 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://blogs-frontend.vercel.app"
+}));
+
 app.use(express.json());
 
 // MongoDB Connection
@@ -18,7 +24,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 })
 .then(() => console.log("MongoDB connected"))
-.catch(err => console.error(err));
+.catch(err => console.error("MongoDB connection error:", err));
 
 // Schema & Model
 const postSchema = new mongoose.Schema({
